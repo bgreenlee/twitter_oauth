@@ -3,7 +3,7 @@ module TwitterOAuth
     
     # The user specified in the id is blocked by the authenticated user and reported as a spammer.
     def report_spam(user)
-      post("/report_spam.json", :id => user)
+      post("/report_spam", :id => user)
     end
     
   end

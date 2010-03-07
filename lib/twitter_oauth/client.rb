@@ -35,12 +35,12 @@ module TwitterOAuth
     end
   
     def show(username)
-      get("/users/show/#{username}.json")
+      get("/users/show/#{username}")
     end
     
     # Returns the string "ok" in the requested format with a 200 OK HTTP status code.
     def test
-      get("/help/test.json")
+      get("/help/test")
     end
     
     def request_token(options={})
@@ -65,18 +65,22 @@ module TwitterOAuth
         @access_token ||= OAuth::AccessToken.new(consumer, @token, @secret)
       end
       
-      def get(url)
-        oauth_response = access_token.get(url)
+      def get(url, options = {})
+        if options.any?
+          args = options.map{|k,v| "#{k}=#{v}"}.join('&')
+          url << "?#{args}"
+        end
+        oauth_response = access_token.get(url, {'Accept' => 'application/json'})
         JSON.parse(oauth_response.body)
       end
 
       def post(url, body = '', headers = {})
-        oauth_response = access_token.post(url, body, headers)
+        oauth_response = access_token.post(url, body, {'Accept' => 'application/json'}.update(headers))
         JSON.parse(oauth_response.body)
       end
 
       def delete(url)
-        oauth_response = access_token.delete(url)
+        oauth_response = access_token.delete(url, {'Accept' => 'application/json'})
         JSON.parse(oauth_response.body)
       end
   end
