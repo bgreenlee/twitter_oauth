@@ -66,6 +66,7 @@ module TwitterOAuth
       end
       
       def get(url, options = {})
+        url << ".json"
         if options.any?
           args = options.map{|k,v| "#{k}=#{v}"}.join('&')
           url << "?#{args}"
@@ -75,12 +76,12 @@ module TwitterOAuth
       end
 
       def post(url, body = '', headers = {})
-        oauth_response = access_token.post(url, body, {'Accept' => 'application/json'}.update(headers))
+        oauth_response = access_token.post(url + ".json", body, {'Accept' => 'application/json'}.update(headers))
         JSON.parse(oauth_response.body)
       end
 
       def delete(url)
-        oauth_response = access_token.delete(url, {'Accept' => 'application/json'})
+        oauth_response = access_token.delete(url + ".json", {'Accept' => 'application/json'})
         JSON.parse(oauth_response.body)
       end
   end
